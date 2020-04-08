@@ -327,9 +327,9 @@ CONTAINS
 
             ! Shutdown?
             IF (LocalVar%Time > 30.0) THEN
-                ! IF (SD_BlPitchF > CntrPar%SD_MaxPit) THEN
-                !     LocalVar%SD  = .TRUE.
                 IF (LocalVar%GenSpeedF > CntrPar%PC_RefSpd*1.2) THEN
+                    LocalVar%SD  = .TRUE.
+                ELSEIF (SD_BlPitchF > CntrPar%SD_MaxPit) THEN
                     LocalVar%SD  = .TRUE.
                 ELSEIF (ABS(SD_YawErrF) > MaxYaw*D2R) THEN 
                     LocalVar%SD  = .TRUE.
@@ -343,7 +343,10 @@ CONTAINS
         IF (LocalVar%SD) THEN
             
             ! E-stop - Pitch-to-stall (downwind, Below Rated)
-            IF (( (downwind) .AND. (LocalVar%GenTq < 0.9*CntrPar%VS_ArSatTq) .AND. (LocalVar%PC_PitComT < 2.0*D2R) ) .OR. (SD_p2s) ) THEN
+            IF (( (downwind) .AND. (LocalVar%GenTq < 0.9*CntrPar%VS_ArSatTq) .AND. &
+                (LocalVar%PC_PitComT < 2.0*D2R) ) &
+                .OR. (SD_p2s) ) THEN
+
                 Shutdown = LocalVar%BlPitch(1) - CntrPar%PC_MaxRat*LocalVar%DT
                 LocalVar%PC_MinPit = -90*D2R
             
