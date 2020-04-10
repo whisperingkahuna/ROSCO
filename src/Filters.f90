@@ -60,7 +60,8 @@ CONTAINS
         ! Define coefficients
 
         ! Filter
-        LPFilter = 1.0/a1(inst) * (-a0(inst)*OutputSignalLast(inst) + b1(inst)*InputSignal + b0(inst)*InputSignalLast(inst))
+        LPFilter = 1.0/a1(inst) * (-a0(inst)*OutputSignalLast(inst) & 
+                                    + b1(inst)*InputSignal + b0(inst)*InputSignalLast(inst))
 
         ! Save signals for next time step
         InputSignalLast(inst)  = InputSignal
@@ -110,11 +111,9 @@ CONTAINS
         ENDIF
 
         ! Filter
-        SecLPFilter = 1.0/a2(inst) * (b2(inst)*InputSignal + b1(inst)*InputSignalLast1(inst) + b0(inst)*InputSignalLast2(inst) - a1(inst)*OutputSignalLast1(inst) - a0(inst)*OutputSignalLast2(inst))
-
-        ! SecLPFilter = 1/(4+4*DT*Damp*CornerFreq+DT**2*CornerFreq**2) * ( (8-2*DT**2*CornerFreq**2)*OutputSignalLast1(inst) &
-        !                 + (-4+4*DT*Damp*CornerFreq-DT**2*CornerFreq**2)*OutputSignalLast2(inst) + (DT**2*CornerFreq**2)*InputSignal &
-        !                     + (2*DT**2*CornerFreq**2)*InputSignalLast1(inst) + (DT**2*CornerFreq**2)*InputSignalLast2(inst) )
+        SecLPFilter = 1.0/a2(inst) * (b2(inst)*InputSignal + b1(inst)*InputSignalLast1(inst) + & 
+                                                        b0(inst)*InputSignalLast2(inst) - & 
+                                a1(inst)*OutputSignalLast1(inst) - a0(inst)*OutputSignalLast2(inst))
 
         ! Save signals for next time step
         InputSignalLast2(inst)   = InputSignalLast1(inst)
@@ -189,10 +188,6 @@ CONTAINS
 
         NotchFilterSlopes = 1.0/a2(inst) * (b2(inst)*InputSignal + b0(inst)*InputSignalLast2(inst) &
                             - a1(inst)*OutputSignalLast1(inst)  - a0(inst)*OutputSignalLast2(inst))
-        ! Body
-        ! NotchFilterSlopes = 1.0/(4.0+2.0*DT*Damp*CornerFreq+DT**2.0*CornerFreq**2.0) * ( (8.0-2.0*DT**2.0*CornerFreq**2.0)*OutputSignalLast1(inst) &
-        !                 + (-4.0+2.0*DT*Damp*CornerFreq-DT**2.0*CornerFreq**2.0)*OutputSignalLast2(inst) + &
-        !                     (2.0*DT*Damp*CornerFreq)*InputSignal + (-2.0*DT*Damp*CornerFreq)*InputSignalLast2(inst) )
 
         ! Save signals for next time step
         InputSignalLast2(inst)   = InputSignalLast1(inst)
