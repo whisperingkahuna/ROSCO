@@ -217,11 +217,8 @@ CONTAINS
             ENDIF
 
         ELSE        
-            ! Define Variables
-            F_WECornerFreq = 0.0333  ! Fix to 30 second time constant for now    
-
-            ! Filter wind speed at hub height as directly passed from OpenFAST
-            LocalVar%WE_Vw = LPFilter(LocalVar%HorWindV, LocalVar%DT, F_WECornerFreq, LocalVar%iStatus, .FALSE., objInst%instLPF)
+            ! Filtered wind speed at hub height as directly passed from OpenFAST
+            LocalVar%WE_Vw = LocalVar%HorWindV_F
         ENDIF 
 
     END SUBROUTINE WindSpeedEstimator
