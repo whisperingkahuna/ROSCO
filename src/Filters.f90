@@ -253,6 +253,8 @@ CONTAINS
         TYPE(LocalVariables), INTENT(INOUT)     :: LocalVar
         TYPE(ObjectInstances), INTENT(INOUT)    :: objInst
 
+        REAL(4) :: u_CornerFreq = 0.0333 ! Corner frequency for wind speed
+
         ! Filter the HSS (generator) speed measurement:
         ! Apply Low-Pass Filter (choice between first- and second-order low-pass filter)
         IF (CntrPar%F_LPFType == 1) THEN
@@ -276,7 +278,8 @@ CONTAINS
 
         LocalVar%FA_AccHPF = HPFilter(LocalVar%FA_Acc, LocalVar%DT, CntrPar%FA_HPFCornerFreq, LocalVar%iStatus, .FALSE., objInst%instHPF)
         
-        ! Wind Speed Estimator
+        ! Wind
+        LocalVar%HorWindV_F = LPFilter(LocalVar%HorWindV, LocalVar%DT, u_CornerFreq, LocalVar%iStatus, .FALSE., objInst%instLPF)
         LocalVar%We_Vw_F = LPFilter(LocalVar%We_Vw, LocalVar%DT, 0.6283, LocalVar%iStatus, .FALSE., objInst%instLPF)
 
     END SUBROUTINE PreFilterMeasuredSignals
