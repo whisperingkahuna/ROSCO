@@ -155,7 +155,7 @@ CONTAINS
         ELSEIF (CntrPar%WE_Mode == 2) THEN
             ! Define contant values
             L = 4.0 * CntrPar%WE_BladeRadius
-            Ti = 0.2
+            Ti = 0.1
             R_m = 0.02
             H = RESHAPE((/1.0 , 0.0 , 0.0/),(/1,3/))
             ! Define matrices to be filled
