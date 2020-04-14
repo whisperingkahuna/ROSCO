@@ -181,12 +181,12 @@ CONTAINS
             LocalVar%GenTq = saturate(LocalVar%GenTq, CntrPar%VS_MinTq, VS_MaxTq)
         ENDIF
 
-
-        ! Saturate the commanded torque using the maximum torque limit:
-        LocalVar%GenTq = MIN(LocalVar%GenTq, CntrPar%VS_MaxTq)                    ! Saturate the command using the maximum torque limit
-        
         ! Saturate the commanded torque using the torque rate limit:
-        LocalVar%GenTq = ratelimit(LocalVar%GenTq, LocalVar%VS_LastGenTrq, -CntrPar%VS_MaxRat, CntrPar%VS_MaxRat, LocalVar%DT)    ! Saturate the command using the torque rate limit
+        LocalVar%GenTq = ratelimit(LocalVar%GenTq, LocalVar%VS_LastGenTrq, -CntrPar%VS_MaxRat, CntrPar%VS_MaxRat, LocalVar%DT)  
+
+        ! Saturate the commanded torque command:
+        LocalVar%GenTq = MAX(CntrPar%VS_MinTq, MIN(LocalVar%GenTq, CntrPar%VS_MaxTq))                    
+        
         
         ! Reset the value of LocalVar%VS_LastGenTrq to the current values:
         LocalVar%VS_LastGenTrq = LocalVar%GenTq

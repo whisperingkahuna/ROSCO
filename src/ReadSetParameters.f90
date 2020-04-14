@@ -212,6 +212,8 @@ CONTAINS
         ! END OF INPUT FILE    
         
         !------------------- CALCULATED CONSTANTS -----------------------
+        CntrPar%VS_MinTq = CntrPar%VS_MinTq + EPSILON(1.0)
+
         CntrPar%PC_RtTq99 = CntrPar%VS_RtTq*0.99
         CntrPar%VS_MinOMTq = CntrPar%VS_Rgn2K*CntrPar%VS_MinOMSpd**2
         CntrPar%VS_MaxOMTq = CntrPar%VS_Rgn2K*CntrPar%VS_RefSpd**2
