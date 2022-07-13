@@ -429,12 +429,9 @@ def sweep_ipc_gains(start_group, **control_sweep_opts):
     # kis = [0.,0.6,1.2,1.8,2.4,3.]
     KIs = [[ki * 1e-8,0.] for ki in kis]
     case_inputs_control[('DISCON_in','IPC_ControlMode')] = {'vals': [1], 'group': 0}
-    # case_inputs_control[('DISCON_in','IPC_KI')] = {'vals': [[0.,0.],[1e-8,0.]], 'group': start_group}
     case_inputs_control[('DISCON_in','IPC_KI')] = {'vals': KIs, 'group': start_group}
     case_inputs_control[('DISCON_in','IPC_aziOffset')] = {'vals': [[0.0,0]], 'group': 0}
     case_inputs_control[('DISCON_in','IPC_IntSat')] = {'vals': [0.2618], 'group': 0}
-
-    # [-0.5236,-0.43633,-0.34907,-0.2618,-0.17453,-0.087266           0    0.087266     0.17453      0.2618     0.34907     0.43633      0.5236     0.61087     0.69813      0.7854'
 
     return case_inputs_control
 
