@@ -16,7 +16,7 @@ import matplotlib.pyplot as plt
 # ROSCO toolbox modules 
 from ROSCO_toolbox import controller as ROSCO_controller
 from ROSCO_toolbox import turbine as ROSCO_turbine
-from ROSCO_toolbox.utilities import DISCON_dict
+from ROSCO_toolbox.utilities import DISCON_dict, write_DISCON
 from ROSCO_toolbox.ofTools.fast_io import output_processing
 from ROSCO_toolbox.inputs.validation import load_rosco_yaml
 from ROSCO_toolbox.ofTools.case_gen.CaseLibrary import set_channels
@@ -31,7 +31,7 @@ example_out_dir   = os.path.join(this_dir,'examples_out')
 run_dir = os.path.join(example_out_dir, '13_ipc_sim')
 
 # Load yaml file (Open Loop Case)
-parameter_filename = os.path.join(rosco_dir,'Tune_Cases/BAR.yaml')
+parameter_filename = os.path.join(rosco_dir,'Tune_Cases/IEA15MW.yaml')
 
 inps = load_rosco_yaml(parameter_filename)
 path_params         = inps['path_params']
@@ -41,6 +41,11 @@ controller_params   = inps['controller_params']
 # Turn flaps off and IPC on
 controller_params['Flp_Mode'] = 0
 controller_params['IPC_ControlMode'] = 1
+
+# Some other controller parameters to vary
+controller_params['DISCON']['IPC_KI'] = [8e-11,0]
+controller_params['DISCON']['IPC_SatMode'] = 2
+
 
 # Instantiate turbine, and controller
 turbine         = ROSCO_turbine.Turbine(turbine_params)
@@ -60,6 +65,7 @@ elif platform.system() == 'Darwin':
 else:
     rosco_dll = os.path.join(rosco_dir, 'ROSCO/build/libdiscon.so')
 
+# OpenFAST settings required for runnign IPC
 case_inputs = {}
 case_inputs[('ServoDyn','DLL_FileName')] = {'vals': [rosco_dll], 'group': 0}
 case_inputs[('ServoDyn','Ptch_Cntrl')]   = {'vals': [1], 'group': 0}
@@ -71,10 +77,21 @@ discon_vt = DISCON_dict(
             txt_filename=os.path.join(this_dir,path_params['FAST_directory'],path_params['rotor_performance_filename'])
             )
 
+# Write discon
+write_DISCON(
+  turbine,      # unused since rosco_vt provided
+  controller,   # unused since rosco_vt provided
+  param_file=os.path.join(example_out_dir,'13_IPC_DISCON.IN'), 
+  txt_filename=path_params['rotor_performance_filename'], 
+  rosco_vt = discon_vt
+  )
+
+
+# Generate cases, will run OpenFAST model
 for discon_input in discon_vt:
     case_inputs[('DISCON_in',discon_input)] = {'vals': [discon_vt[discon_input]], 'group': 0}
 
-# Generate cases
+
 if not os.path.exists(run_dir):
   os.makedirs(run_dir)
 
