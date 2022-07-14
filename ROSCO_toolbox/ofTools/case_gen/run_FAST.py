@@ -179,7 +179,7 @@ class run_FAST_ROSCO():
 if __name__ == "__main__":
 
     # Simulation config
-    sim_config = 11
+    sim_config = 8
     
     r = run_FAST_ROSCO()
 
@@ -222,13 +222,19 @@ if __name__ == "__main__":
     elif sim_config == 8:
 
         # RAAW IPC set up
-        r.tuning_yaml   = '/Users/dzalkind/Projects/RAAW/RAAW_OpenFAST/ROSCO/RAAW_rosco_BD.yaml'
+        r.tuning_yaml   = '/Users/dzalkind/Tools/ROSCO/Tune_Cases/IEA15MW_IPC.yaml'
         r.wind_case_fcn = cl.power_curve
+        r.wind_case_fcn = cl.turb_bts
         r.wind_case_opts    = {
-            'U': [16],
+            'TMax': 720,
+            'wind_filenames': ['/Users/dzalkind/Downloads/IEA15_0_1ETM_U9.000000_Seed2037706757.0.bts']
             }
-        r.save_dir      = '/Users/dzalkind/Projects/RAAW/RAAW_OpenFAST/outputs/IPC_play'
+        # r.wind_case_opts    = {
+        #     'U': [16],
+        #     }
+        r.save_dir      = '/Users/dzalkind/Tools/ROSCO/outputs/IPC_aziOffset'
         r.control_sweep_fcn = cl.sweep_ipc_gains
+        r.n_cores = 6
 
     elif sim_config == 9:
 

@@ -425,13 +425,18 @@ def sweep_pitch_act(start_group, **control_sweep_opts):
 def sweep_ipc_gains(start_group, **control_sweep_opts):
     case_inputs_control = {}
 
-    kis = np.linspace(0,3,6).tolist()
+    kis = np.linspace(0,2,6).tolist()
     # kis = [0.,0.6,1.2,1.8,2.4,3.]
-    KIs = [[ki * 1e-8,0.] for ki in kis]
+    KIs = [[ki * 1e-9,0.] for ki in kis]
+
+    az_offset = np.radians(np.arange(0,60,10)).tolist()
+    az_offset = [[ao, 0.] for ao in az_offset]
     case_inputs_control[('DISCON_in','IPC_ControlMode')] = {'vals': [1], 'group': 0}
-    case_inputs_control[('DISCON_in','IPC_KI')] = {'vals': KIs, 'group': start_group}
+    case_inputs_control[('DISCON_in','IPC_KI')] = {'vals': [[8e-11,0]], 'group': 0}
+    # case_inputs_control[('DISCON_in','IPC_KP')] = {'vals': KIs, 'group': start_group}
     case_inputs_control[('DISCON_in','IPC_aziOffset')] = {'vals': [[0.0,0]], 'group': 0}
     case_inputs_control[('DISCON_in','IPC_IntSat')] = {'vals': [0.2618], 'group': 0}
+    # case_inputs_control[('DISCON_in','IPC_SatMode')] = {'vals': [0,1,2], 'group': start_group}
 
     return case_inputs_control
 
